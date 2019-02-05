@@ -3,7 +3,7 @@ defmodule Memory.Game do
     def new do
         %{
             board: newBoard(),
-            clickCount: 0,
+            clickCount: -1,
             register: -1
         }
     end
@@ -29,7 +29,7 @@ defmodule Memory.Game do
         # soln = game.board
         %{
             skel: strip(game.board),
-            clickCount: 0
+            clickCount: game.clickCount + 1
         }
     end
     
