@@ -16,8 +16,10 @@ defmodule MemoryWeb.GamesChannel do
       end
     end
   
-    def handle_in(xxx, socket) do
-        # TODO:
+    def handle_in("guess", %{"idx" => idx}, socket) do
+      game = Game.guess(socket.assigns[:game], idx)
+      socket = assign(socket, :game, game)
+      {:reply, {:ok, %{ "game" => Game.client_view(game)}}, socket}
     end
   
     # Add authorization logic here as required.
