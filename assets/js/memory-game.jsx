@@ -6,6 +6,8 @@ export default function game_init(root) {
   ReactDOM.render(<Memory />, root);
 }
 
+// TODO: totally wrong
+
 class Memory extends React.Component {
   // Define our initial state (unordered board, 0 clicks, storedGuess null)
   // Scramble the board
