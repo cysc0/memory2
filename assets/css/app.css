@@ -1,0 +1,46 @@
+/* This file is for your main application css. */
+
+@import "~milligram/dist/milligram";
+
+.gameRestart {
+    flex-wrap: nowrap;
+    height:100%;
+    margin: 4px;
+    background-color: cornflowerblue;
+    border: cornflowerblue;
+}
+
+.gameCounter {
+    display: inline;
+    margin: 4px;
+}
+
+.gameButton {
+    /* font-size: 200%; */
+    font-size: 2rem;
+    height: 4em;
+    width: 4em;
+    margin: 4px;
+    flex-wrap: none;
+    display: inline-block;
+}
+
+.gameButton.discovered {
+    pointer-events: none;
+    background-color: palevioletred;
+    border: palevioletred;
+    pointer-events: none;
+}
+
+#tileContainer {
+    max-width: 24em;
+    flex-wrap: none;
+    display: inline-block;
+}
+
+#gameCounter {
+    width: 8em;
+    margin: 1px;
+    padding: 1px;
+    pointer-events: none;
+}
