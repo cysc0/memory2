@@ -33,9 +33,29 @@ class Memory extends React.Component {
     this.setState(view.game);
   }
 
+  revealedCount() {
+    var count = 0;
+    for (var i in this.state.skel) {
+      if (this.state.skel[i] !== " ") {
+        count += 1;
+      }
+    }
+    return count;
+  }
+
   on_guess(ev) {
-    this.channel.push("guess", { idx: ev.target.getAttribute("idx") })
-        .receive("ok", this.got_view.bind(this));
+    if (this.revealedCount() % 2 === 0) {
+      // expects 1 receive
+      this.channel.push("guess", { idx: ev.target.getAttribute("idx") })
+          .receive("ok", this.got_view.bind(this));
+    } else {
+      // expects 2 receives
+      this.channel.push("guess", { idx: ev.target.getAttribute("idx") })
+          .receive("ok", this.got_view.bind(this));
+      this.channel.push("revert", {})
+          .receive("ok", this.got_view.bind(this));
+      
+    }
   }
   
   // generate tiles and root page

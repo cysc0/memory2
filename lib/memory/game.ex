@@ -1,11 +1,10 @@
-# TODO: flashing behavior when incorrect second guess
 # TODO: channels
 defmodule Memory.Game do
     def new do
         %{
             board: newBoard(),
             clickCount: -1,
-            register: -1
+            register: []
         }
     end
     
@@ -46,45 +45,62 @@ defmodule Memory.Game do
         end
     end
 
+    def revert(game) do
+        if length(game.register) > 0 do
+            Process.sleep(1000)
+            {curReg, restReg} = List.pop_at(game.register, 0)
+            {restoreElem, _} = List.pop_at(game.board, curReg)
+            restoreElem = Map.replace(restoreElem, :display, false)
+            newBoard = List.replace_at(game.board, curReg, restoreElem)
+            {curReg, _} = List.pop_at(restReg, 0)
+            {restoreElem, _} = List.pop_at(game.board, curReg)
+            restoreElem = Map.replace(restoreElem, :display, false)
+            newBoard = List.replace_at(newBoard, curReg, restoreElem)
+            
+            %{
+                board: newBoard,
+                clickCount: game.clickCount,
+                register: []
+            }
+        else
+            game
+        end
+    end
+
+
     def guess(game, idx) do
         idx = String.to_integer(idx)
         {newElem, _} = List.pop_at(game.board, idx)
         newElem = Map.replace(newElem, :display, true)
         newBoard = List.replace_at(game.board, idx, newElem)
-        if game.register === -1 do
+        if length(game.register) === 0 do
             # first part of guess
             %{
                 board: newBoard,
                 clickCount: game.clickCount + 1,
-                register: idx
+                register: [idx]
             }
         else
             # second part of guess
-            {prevGuess, _} = List.pop_at(game.board, game.register)
+            lol = List.pop_at(game.register, 0)
+            {targetReg, _} = List.pop_at(game.register, 0)
+            {prevGuess, _} = List.pop_at(game.board, targetReg)
             if prevGuess.letter === newElem.letter do
                 # correct pair
                 %{
                     board: newBoard,
                     clickCount: game.clickCount + 1,
-                    register: -1
+                    register: []
                 }
             else
                 # incorrect pair
-                {restoreElem, _} = List.pop_at(game.board, game.register)
+                {restoreReg, _} = List.pop_at(game.register, 0)
+                {restoreElem, _} = List.pop_at(game.board, restoreReg)
                 restoreElem = Map.replace(restoreElem, :display, false)
-
-                Task.async(fn ->
-                    %{
-                        board: newBoard,
-                        clickCount: game.clickCount + 1,
-                        register: idx
-                    }
-                    Process.sleep(1000)
-                  end)
                 %{
-                    board: List.replace_at(game.board, game.register, restoreElem),
-                    clickCount: game.clickCount,
-                    register: -1
+                    board: newBoard,
+                    clickCount: game.clickCount + 1,
+                    register: game.register ++ [idx]
                 }
             end
         end
