@@ -24,16 +24,13 @@ class Memory extends React.Component {
         .receive("error", resp => { console.log("Unable to join", resp); });
   }
 
-  // Sleep promise implementation from: https://davidwalsh.name/javascript-sleep-function
-  sleep (time) {
-    return new Promise((resolve) => setTimeout(resolve, time));
-  }
-
   got_view(view) {
+    // just set the state to the input
     this.setState(view.game);
   }
 
   revealedCount() {
+    // helper to see how many revealed tiles there are
     var count = 0;
     for (var i in this.state.skel) {
       if (this.state.skel[i] !== " ") {
@@ -44,12 +41,16 @@ class Memory extends React.Component {
   }
 
   on_guess(ev) {
+    // when the user clicks a tile
     if (this.revealedCount() % 2 === 0) {
-      // expects 1 receive
+      // this is the first pair in a guess
       this.channel.push("guess", { idx: ev.target.getAttribute("idx") })
           .receive("ok", this.got_view.bind(this));
     } else {
-      // expects 2 receives
+      // this is the second pair in a guess
+      //   first send the guess down the channel, then send a revert request
+      //   which basically checks to see if that second guess was correct or not
+      //   this is how the momentary display logic is hanlded - server side
       this.channel.push("guess", { idx: ev.target.getAttribute("idx") })
           .receive("ok", this.got_view.bind(this));
       this.channel.push("revert", {})
@@ -58,6 +59,7 @@ class Memory extends React.Component {
   }
 
   restart() {
+    // push a restart command down the channel, which gets us a fresh game state
     this.channel.push("restart", {})
         .receive("ok", this.got_view.bind(this));
   }

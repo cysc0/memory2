@@ -1,5 +1,7 @@
 defmodule Memory.Game do
     def new do
+        # initialize our state, clickCount is -1 cause client_view iterates
+        #   on the first pass.
         %{
             board: newBoard(),
             clickCount: -1,
@@ -45,7 +47,12 @@ defmodule Memory.Game do
     end
 
     def revert(game) do
+        # TODO: this is dumb lazy, rewrite me to be cleaner
+        # iterate through our register of game tiles, find them on the
+        #   board, and set those tiles display state to false
+        # this is used after the second guess
         if length(game.register) > 0 do
+            # if we have tiles to revert
             Process.sleep(1000)
             {curReg, restReg} = List.pop_at(game.register, 0)
             {restoreElem, _} = List.pop_at(game.board, curReg)
@@ -55,19 +62,20 @@ defmodule Memory.Game do
             {restoreElem, _} = List.pop_at(game.board, curReg)
             restoreElem = Map.replace(restoreElem, :display, false)
             newBoard = List.replace_at(newBoard, curReg, restoreElem)
-            
             %{
                 board: newBoard,
                 clickCount: game.clickCount,
                 register: []
             }
         else
+            # if the guess was correct (register empty), echo the input state
             game
         end
     end
 
 
     def guess(game, idx) do
+        # process a guess
         idx = String.to_integer(idx)
         {newElem, _} = List.pop_at(game.board, idx)
         newElem = Map.replace(newElem, :display, true)

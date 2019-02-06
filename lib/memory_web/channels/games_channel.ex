@@ -19,6 +19,7 @@ defmodule MemoryWeb.GamesChannel do
       end
     end
   
+    # handle first guess, apply guess to server and respond
     def handle_in("guess", %{"idx" => idx}, socket) do
       name = socket.assigns[:name]
       game = Game.guess(socket.assigns[:game], idx)
@@ -27,6 +28,8 @@ defmodule MemoryWeb.GamesChannel do
       {:reply, {:ok, %{ "game" => Game.client_view(game)}}, socket}
     end
   
+    # handle revert, this is where we check if the second guess is good or bad
+    #   and if its bad, we display the guess briefly, before restoring
     def handle_in("revert", %{}, socket) do
       name = socket.assigns[:name]
       game = Game.revert(socket.assigns[:game])
@@ -35,6 +38,7 @@ defmodule MemoryWeb.GamesChannel do
       {:reply, {:ok, %{ "game" => Game.client_view(game)}}, socket}
     end
   
+    # handle restart, wipe this rooms state and start a new game
     def handle_in("restart", %{}, socket) do
       name = socket.assigns[:name]
       game = Game.new()
