@@ -89,7 +89,6 @@ defmodule Memory.Game do
             }
         else
             # second part of guess
-            lol = List.pop_at(game.register, 0)
             {targetReg, _} = List.pop_at(game.register, 0)
             {prevGuess, _} = List.pop_at(game.board, targetReg)
             if prevGuess.letter === newElem.letter do
@@ -101,9 +100,6 @@ defmodule Memory.Game do
                 }
             else
                 # incorrect pair
-                {restoreReg, _} = List.pop_at(game.register, 0)
-                {restoreElem, _} = List.pop_at(game.board, restoreReg)
-                restoreElem = Map.replace(restoreElem, :display, false)
                 %{
                     board: newBoard,
                     clickCount: game.clickCount + 1,
