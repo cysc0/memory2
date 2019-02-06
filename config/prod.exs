@@ -14,7 +14,7 @@ config :memory, MemoryWeb.Endpoint,
   root: ".",
   version: Application.spec(:phoenix_distillery, :vsn),
   http: [:inet6, port: {:system, "PORT"}],
-  url: [host: "memory1.zombo.club", port: 80],
+  url: [host: "memory2.zombo.club", port: 80],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
 # Do not print debug messages in production
@@ -72,20 +72,18 @@ config :logger, level: :info
 # Finally import the config/prod.secret.exs which should be versioned
 # separately.
 
-# In this file, we keep production configuration that
-# you'll likely want to automate and keep away from
-# your version control system.
-#
-# You should document the content of this
-# file or create a script for recreating it, since it's
-# kept out of version control and might be hard to recover
-# or recreate for your teammates (or yourself later on).
-path = Path.expand("~/.config/memory.secret")
-unless File.exists?(path) do
-  secret = Base.encode16(:crypto.strong_rand_bytes(32))
-  File.write!(path, secret)
+get_secret = fn name ->
+  # Secret generation hack by Nat Tuck for CS4550
+  # This function is dedicated to the public domain.
+  base = Path.expand("~/.config/phx-secrets")
+  File.mkdir_p!(base)
+  path = Path.join(base, name)
+  unless File.exists?(path) do
+    secret = Base.encode16(:crypto.strong_rand_bytes(32))
+    File.write!(path, secret)
+  end
+  String.trim(File.read!(path))
 end
-secret = File.read!(path)
 
-config :memory, MemoryWeb.Endpoint,
-  secret_key_base: secret
+config :foo, HangmanWeb.Endpoint,
+  secret_key_base: get_secret.("key_base")

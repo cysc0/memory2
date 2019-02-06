@@ -1,4 +1,3 @@
-# TODO: channels
 defmodule Memory.Game do
     def new do
         %{
@@ -14,7 +13,7 @@ defmodule Memory.Game do
         board = [%{letter: "A", display: false},
         %{letter: "B", display: false},
         %{letter: "C", display: false},
-        %{letter: "D", display: true},
+        %{letter: "D", display: false},
         %{letter: "E", display: false},
         %{letter: "F", display: false},
         %{letter: "G", display: false},

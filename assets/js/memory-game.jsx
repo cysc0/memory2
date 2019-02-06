@@ -54,8 +54,12 @@ class Memory extends React.Component {
           .receive("ok", this.got_view.bind(this));
       this.channel.push("revert", {})
           .receive("ok", this.got_view.bind(this));
-      
     }
+  }
+
+  restart() {
+    this.channel.push("restart", {})
+        .receive("ok", this.got_view.bind(this));
   }
   
   // generate tiles and root page
@@ -63,7 +67,7 @@ class Memory extends React.Component {
     // Define elements for restart button and click counter
     let menuRow =
       <div className="gameMenu">
-        <button className="gameRestart">Restart</button>
+        <button className="gameRestart" onClick={this.restart.bind(this)}>Restart</button>
         <p className="gameCounter">
           &nbsp;Click Count: <input readOnly={true} type="text" id="gameCounter" value={this.state.clickCount}></input>
         </p>
