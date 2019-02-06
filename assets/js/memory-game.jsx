@@ -6,15 +6,6 @@ export default function game_init(root, channel) {
   ReactDOM.render(<Memory channel={channel} />, root);
 }
 
-// TODO: totally wrong
-// Client state contains:
-// guessCount: # tiles clicked
-// skel: List of letters
-//   if a pair is discovered, the list will contain those elements at proper indices
-//   if a tile is clicked, skel will contain it no matter what
-//     if the second guess is bad then skel will have that letter removed from it
-//   nondiscovered tiles have empty elems at that index
-
 class Memory extends React.Component {
   // Define our initial state (unordered board, 0 clicks, storedGuess null)
   // Scramble the board

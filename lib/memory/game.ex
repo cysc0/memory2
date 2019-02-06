@@ -1,4 +1,5 @@
-# TODO: server-side game logic here
+# TODO: flashing behavior when incorrect second guess
+# TODO: channels
 defmodule Memory.Game do
     def new do
         %{
@@ -51,25 +52,38 @@ defmodule Memory.Game do
         newElem = Map.replace(newElem, :display, true)
         newBoard = List.replace_at(game.board, idx, newElem)
         if game.register === -1 do
+            # first part of guess
             %{
                 board: newBoard,
                 clickCount: game.clickCount + 1,
                 register: idx
             }
         else
+            # second part of guess
             {prevGuess, _} = List.pop_at(game.board, game.register)
             if prevGuess.letter === newElem.letter do
+                # correct pair
                 %{
                     board: newBoard,
                     clickCount: game.clickCount + 1,
                     register: -1
                 }
             else
+                # incorrect pair
                 {restoreElem, _} = List.pop_at(game.board, game.register)
                 restoreElem = Map.replace(restoreElem, :display, false)
+
+                Task.async(fn ->
+                    %{
+                        board: newBoard,
+                        clickCount: game.clickCount + 1,
+                        register: idx
+                    }
+                    Process.sleep(1000)
+                  end)
                 %{
                     board: List.replace_at(game.board, game.register, restoreElem),
-                    clickCount: game.clickCount + 1,
+                    clickCount: game.clickCount,
                     register: -1
                 }
             end

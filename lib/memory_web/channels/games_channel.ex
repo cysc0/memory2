@@ -4,6 +4,7 @@ defmodule MemoryWeb.GamesChannel do
     alias Memory.Game
   
     # Source: Nat Tuck - https://github.com/NatTuck/hangman-2019-01/blob/422f1b60ef5d4b51afe20ec65f7d30746ef11f82/lib/hangman_web/channels/games_channel.ex
+    # Applies to handle_in() as well
     def join("games:" <> name, payload, socket) do
       if authorized?(payload) do
         game = Game.new()
