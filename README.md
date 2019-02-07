@@ -4,7 +4,7 @@ assets/css/app.css - custom css for memory game
 assets/js/memory-game.jsx  
 assets/js/socket.js  
 lib/memory_web/channels/games_channel.ex  
-lib/memory/game.ex
+lib/memory/game.ex  
 (nginx/service files, elixir config files, etc)  
   
 ## Tile Flashing behavior
